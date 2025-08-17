@@ -21,17 +21,17 @@ http::response<http::string_body> handle_request(http::request<http::string_body
     return res;
 }
 
-inline void HttpSession::run() {
+void HttpSession::run() {
     net::dispatch(stream_.get_executor(), beast::bind_front_handler(&HttpSession::do_read, shared_from_this()));
 }
 
-inline void HttpSession::do_read() {
+void HttpSession::do_read() {
     req_ = {};
     stream_.expires_after(std::chrono::seconds(30));
     http::async_read(stream_, buffer_, req_, beast::bind_front_handler(&HttpSession::on_read, shared_from_this()));
 }
 
-inline void HttpSession::on_read(beast::error_code ec, std::size_t bytes_transferred) {
+void HttpSession::on_read(beast::error_code ec, std::size_t bytes_transferred) {
     boost::ignore_unused(bytes_transferred);
     if (ec == http::error::end_of_stream) {
         do_close();
@@ -49,13 +49,13 @@ inline void HttpSession::on_read(beast::error_code ec, std::size_t bytes_transfe
     send_response(handle_request(std::move(req_)));
 }
 
-inline void HttpSession::send_response(http::message_generator&& msg) {
+void HttpSession::send_response(http::message_generator&& msg) {
     bool keep_alive = msg.keep_alive();
     beast::async_write(stream_, std::move(msg),
         beast::bind_front_handler(&HttpSession::on_write, shared_from_this(), keep_alive));
 }
 
-inline void HttpSession::on_write(bool keep_alive, beast::error_code ec, std::size_t bytes_transferred) {
+void HttpSession::on_write(bool keep_alive, beast::error_code ec, std::size_t bytes_transferred) {
     boost::ignore_unused(bytes_transferred);
     if (ec) {
         std::cerr << "write: " << ec.message() << "\n";
@@ -69,7 +69,7 @@ inline void HttpSession::on_write(bool keep_alive, beast::error_code ec, std::si
     }
 }
 
-inline void HttpSession::do_close() {
+void HttpSession::do_close() {
     beast::error_code ec;
     stream_.socket().shutdown(tcp::socket::shutdown_send, ec);
 }
