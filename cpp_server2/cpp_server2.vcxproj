@@ -129,6 +129,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="cpp_server2.cpp" />
+    <ClCompile Include="HttpSession.cpp" />
+    <ClCompile Include="Listener.cpp" />
+    <ClCompile Include="WebSocketSession.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="HttpSession.h" />
+    <ClInclude Include="Listener.h" />
+    <ClInclude Include="WebSocketSession.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
