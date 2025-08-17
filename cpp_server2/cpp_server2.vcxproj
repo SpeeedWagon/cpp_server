@@ -24,6 +24,7 @@
     <ProjectGuid>{eff9a661-bfa2-406d-9978-190b7fe47fa5}</ProjectGuid>
     <RootNamespace>cppserver2</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>cpp_server</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -128,7 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="cpp_server2.cpp" />
+    <ClCompile Include="cpp_server.cpp" />
     <ClCompile Include="HttpSession.cpp" />
     <ClCompile Include="Listener.cpp" />
     <ClCompile Include="WebSocketSession.cpp" />
