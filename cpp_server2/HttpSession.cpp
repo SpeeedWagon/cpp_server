@@ -12,7 +12,7 @@ http::response<http::string_body> handle_request(http::request<http::string_body
         res.prepare_payload();
         return res;
     }
-
+    
     http::response<http::string_body> res{ http::status::ok, req.version() };
     res.set(http::field::server, BOOST_BEAST_VERSION_STRING);
     res.set(http::field::content_type, "text/html");
@@ -33,6 +33,7 @@ void HttpSession::do_read() {
 
 void HttpSession::on_read(beast::error_code ec, std::size_t bytes_transferred) {
     boost::ignore_unused(bytes_transferred);
+    std::cout << "On read function HttpSession\n";
     if (ec == http::error::end_of_stream) {
         do_close();
         return;
@@ -42,7 +43,8 @@ void HttpSession::on_read(beast::error_code ec, std::size_t bytes_transferred) {
     }
 
     if (websocket::is_upgrade(req_)) {
-        std::make_shared<WebSocketSession>(std::move(stream_))->run();
+        std::cout << "I am trying to upgrade"<<"\n";
+        std::make_shared<WebSocketSession>(std::move(stream_), std::move(req_))->run();
         return;
     }
 

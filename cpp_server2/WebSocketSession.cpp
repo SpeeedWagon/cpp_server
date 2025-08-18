@@ -1,6 +1,7 @@
 #include "WebSocketSession.h"
 
 void WebSocketSession::run() {
+    std::cout << "On run function in websocket tiggered" << "\n";
     net::dispatch(ws_.get_executor(),
         beast::bind_front_handler(&WebSocketSession::on_run, shared_from_this()));
 }
@@ -8,11 +9,15 @@ void WebSocketSession::run() {
 void WebSocketSession::on_run() {
     ws_.set_option(websocket::stream_base::timeout::suggested(beast::role_type::server));
     ws_.async_accept(
+        req_,
         beast::bind_front_handler(&WebSocketSession::on_accept, shared_from_this()));
 }
 
 void WebSocketSession::on_accept(beast::error_code ec) {
-    if (ec)  std::cerr << "accept: " << ec.message() << "\n"; return;
+    if (ec) {
+    std::cerr << "accept: " << ec.message() << "\n"; 
+    return; 
+    }
     do_read();
 }
 

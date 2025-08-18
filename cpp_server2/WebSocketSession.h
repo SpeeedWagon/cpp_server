@@ -5,15 +5,17 @@
 
 namespace beast = boost::beast;
 namespace websocket = beast::websocket;
+namespace http = beast::http;
 namespace net = boost::asio;
 
 class WebSocketSession : public std::enable_shared_from_this<WebSocketSession>
 {
     websocket::stream<beast::tcp_stream> ws_;
     beast::flat_buffer buffer_;
+    http::request<http::string_body> req_;
 
 public:
-    explicit WebSocketSession(beast::tcp_stream&& stream) : ws_(std::move(stream)) {}
+    explicit WebSocketSession(beast::tcp_stream&& stream, http::request<http::string_body> req) : ws_(std::move(stream)), req_(std::move(req)) {}
 
     void run();
 
