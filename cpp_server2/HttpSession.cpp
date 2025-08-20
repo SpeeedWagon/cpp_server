@@ -1,6 +1,17 @@
 #include "HttpSession.h"
 #include "WebSocketSession.h"
 
+http::response<http::string_body> make_http_packet_response(const http::request<http::string_body>& req, const std::string& packet_name) {
+    http::response<http::string_body> res{ http::status::ok, req.version() };
+    res.set(http::field::server, BOOST_BEAST_VERSION_STRING);
+    res.set(http::field::content_type, "application/json"); // Assuming you send JSON data
+    res.keep_alive(req.keep_alive());
+    // Create a JSON-like string for the packet
+    res.body() = "{\"packet\": \"" + packet_name + "\", \"data\": \"some-data-for-" + packet_name + "\"}";
+    res.prepare_payload();
+    return res;
+}
+
 http::response<http::string_body> handle_request(http::request<http::string_body>&& req) {
 
     if (req.method() != http::verb::get && req.method() != http::verb::head) {
@@ -12,7 +23,15 @@ http::response<http::string_body> handle_request(http::request<http::string_body
         res.prepare_payload();
         return res;
     }
-    
+
+    if (req.target() == "/packet1") {
+        return make_http_packet_response(req, "packet1");
+    }
+
+    if (req.target() == "/packet2") {
+        return make_http_packet_response(req, "packet2");
+    }
+
     http::response<http::string_body> res{ http::status::ok, req.version() };
     res.set(http::field::server, BOOST_BEAST_VERSION_STRING);
     res.set(http::field::content_type, "text/html");
